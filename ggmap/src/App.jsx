@@ -3,7 +3,7 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css"; // Đảm bảo import CSS của Leaflet
 
-import imageMap from "../public/pic.png"; // Đường dẫn đến hình ảnh overlay
+import imageMap from "../public/map.png"; // Đường dẫn đến hình ảnh overlay
 
 const containerStyle = {
   width: "100%",
