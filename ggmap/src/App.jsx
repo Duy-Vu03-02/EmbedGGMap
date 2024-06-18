@@ -1,30 +1,44 @@
-import { useState } from "react";
-import GoogleMapReact from "google-map-react";
+import React, { useRef, useEffect } from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css"; // Đảm bảo import CSS của Leaflet
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+import imageMap from "../public/pic.png"; // Đường dẫn đến hình ảnh overlay
 
-function App() {
-  const defaultProps = {
-    center: {
-      lat: 10.99835602,
-      lng: 77.01502627,
-    },
-    zoom: 11,
-  };
+const containerStyle = {
+  width: "100%",
+  height: "100vh",
+};
 
-  return (
-    <>
-      <div style={{ height: "100vh", width: "100%" }}>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: "AIzaSyBa7UlmsSGVz7NA2HkBdfevTBiwIPP2mdY" }}
-          defaultCenter={defaultProps.center}
-          defaultZoom={defaultProps.zoom}
-        >
-          <AnyReactComponent lat={59.955413} lng={30.337844} text="My Marker" />
-        </GoogleMapReact>
-      </div>
-    </>
-  );
-}
+const MapOverlay = ({ imageUrl }) => {
+  const mapContainerRef = useRef(null);
 
-export default App;
+  useEffect(() => {
+    const defaultCenter = { lat: 21.136663, lng: 105.7473444 };
+
+    // Tạo bản đồ Leaflet
+    const map = L.map(mapContainerRef.current).setView(defaultCenter, 12);
+
+    // Thêm TileLayer (bản đồ cơ sở)
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Tạo image overlay
+    const imageBounds = [
+      [defaultCenter.lat + 0.01 * 10, defaultCenter.lng + 0.01 * 10],
+      [defaultCenter.lat - 0.01 * 10, defaultCenter.lng - 0.01 * 10],
+    ];
+    L.imageOverlay(imageMap, imageBounds).addTo(map);
+
+    return () => {
+      map.remove(); // Xóa bản đồ khi component bị unmount
+    };
+  }, []);
+
+  return <div ref={mapContainerRef} style={containerStyle}></div>;
+};
+
+export default MapOverlay;
