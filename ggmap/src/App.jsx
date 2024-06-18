@@ -1,9 +1,7 @@
 import React, { useRef, useEffect } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css"; // Đảm bảo import CSS của Leaflet
-
-import imageMap from "../public/map.png"; // Đường dẫn đến hình ảnh overlay
+import "leaflet/dist/leaflet.css";
+import imageMap from "../public/map.png";
 
 const containerStyle = {
   width: "100%",
@@ -26,17 +24,33 @@ const MapOverlay = ({ imageUrl }) => {
       maxZoom: 18,
     }).addTo(map);
 
-    // Tạo image overlay
-    const imageBounds = [
-      [defaultCenter.lat + 0.01 * 10, defaultCenter.lng + 0.01 * 10],
-      [defaultCenter.lat - 0.01 * 10, defaultCenter.lng - 0.01 * 10],
-    ];
-    L.imageOverlay(imageMap, imageBounds).addTo(map);
+    // Tạo bounds cho hình ảnh overlay
+    const imageBounds = calculateImageBounds(defaultCenter);
+
+    // Thêm ảnh overlay vào bản đồ
+    L.imageOverlay(imageMap, imageBounds, { opacity: 0.5 }).addTo(map);
 
     return () => {
       map.remove(); // Xóa bản đồ khi component bị unmount
     };
   }, []);
+
+  const calculateImageBounds = (center) => {
+    const imageSize = { width: 28, height: 22 }; // Kích thước thực của hình ảnh
+
+    // Xác định các góc của ảnh dựa trên tâm và kích thước
+    const southWest = [
+      21.123361631185126 - 0.01 * (imageSize.height / 2), // Điều chỉnh theo tỷ lệ thực tế
+      105.82798587755316 - 0.01 * (imageSize.width / 2),
+    ];
+    const northEast = [
+      21.123361631185126 + 0.01 * (imageSize.height / 2),
+      105.82798587755316 + 0.01 * (imageSize.width / 2),
+    ];
+
+    // Trả về bounds của ảnh
+    return L.latLngBounds(southWest, northEast);
+  };
 
   return <div ref={mapContainerRef} style={containerStyle}></div>;
 };
