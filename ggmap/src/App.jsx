@@ -14,7 +14,7 @@ const App = () => {
     position: "absolute",
     zIndex: 10000,
     top: "150px",
-    left: "-33px",
+    left: "-40px",
     transform: "rotate(90deg)",
   };
   const mapContainerRef = useRef(null);
@@ -52,12 +52,12 @@ const App = () => {
 
     // Xác định các góc của ảnh dựa trên tâm và kích thước
     const southWest = [
-      21.123361631185126 - 0.01 * (imageSize.height / 2), // Điều chỉnh theo tỷ lệ thực tế
-      105.82798587755316 - 0.01 * (imageSize.width / 2),
+      21.123361631185126 - 0.0085 * (imageSize.height / 2), // Điều chỉnh theo tỷ lệ thực tế
+      105.82798587755316 - 0.0102 * (imageSize.width / 2),
     ];
     const northEast = [
-      21.123361631185126 + 0.01 * (imageSize.height / 2),
-      105.82798587755316 + 0.01 * (imageSize.width / 2),
+      21.123361631185126 + 0.0096999 * (imageSize.height / 2),
+      105.82798587755316 + 0.010111 * (imageSize.width / 2),
     ];
 
     // Trả về bounds của ảnh
